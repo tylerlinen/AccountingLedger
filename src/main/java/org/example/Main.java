@@ -3,11 +3,41 @@ package org.example;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static Scanner scanner = null;
+
+    public static void homeScreen() throws IOException {
+        //Home Screen
+        System.out.println("Home Screen");
+        System.out.println("D)" + "Add Deposit");
+        System.out.println("P)" + "Make Payment (Debit)");
+        System.out.println("L)" + "Ledger");
+        System.out.println("X)" + "Exit");
+
+        scanner = new Scanner(System.in);
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "D":
+                makeDeposit();
+                break;
+            case "P":
+                makePayment();
+                break;
+            case "L":
+                ledgerScreen();
+                break;
+            case "X":
+                System.out.println("X)" + "Exit");
+                break;
+        }
+    }
 
     public static void makeDeposit() throws IOException {
         //Deposit
@@ -96,6 +126,7 @@ public class Main {
     }
 
     public static void ledgerScreen() throws IOException {
+
         System.out.println("Ledger");
         System.out.println("A) Display All");
         System.out.println("D) Display All Deposits");
@@ -103,6 +134,29 @@ public class Main {
         System.out.println("R) Reports");
         System.out.println("H) Home");
 
+        scanner = new Scanner(System.in);
+        String value = scanner.nextLine();
+
+        switch (value) {
+            case "A":
+                displayAll();
+                break;
+            case "D":
+                displayDeposits();
+                break;
+            case "P":
+                displayPayments();
+                break;
+            case "R":
+                displayReports();
+                break;
+            case "H":
+                homeScreen();
+                break;
+        }
+    }
+
+    public static void displayAll() throws IOException {
         FileReader fileReader = new FileReader("ledger.csv");
         BufferedReader bufferedReader = new BufferedReader(fileReader);
 
@@ -110,8 +164,8 @@ public class Main {
 
 
         while ((user = bufferedReader.readLine()) != null) {
-            String[] userData = user.toString().split("\\|");
 
+            String[] userData = user.toString().split("\\|");
 
             LocalDate date = LocalDate.parse(userData[0]);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -123,101 +177,227 @@ public class Main {
 
             Transaction t = new Transaction(date, time, description, vendor, amount, deposit);
 
-            String l = scanner.nextLine();
+            System.out.println(t);
 
-            if (l == "A"){
-                System.out.println(deposit);
+        }
+    }
+
+    public static void displayDeposits() throws IOException {
+        FileReader fileReader = new FileReader("ledger.csv");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+        String user = null;
+
+
+        while ((user = bufferedReader.readLine()) != null) {
+
+            String[] userData = user.toString().split("\\|");
+
+            LocalDate date = LocalDate.parse(userData[0]);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime time = LocalDateTime.parse(userData[1], formatter);
+            String description = userData[2];
+            String vendor = userData[3];
+            double amount = Double.parseDouble(userData[4]);
+            boolean deposit = Boolean.parseBoolean(userData[5]);
+
+            Transaction t = new Transaction(date, time, description, vendor, amount, deposit);
+
+            if (deposit == true) {
+                System.out.println(t);
             }
 
         }
+    }
+
+    public static void displayPayments() throws IOException {
+        FileReader fileReader = new FileReader("ledger.csv");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+        String user = null;
 
 
+        while ((user = bufferedReader.readLine()) != null) {
+
+            String[] userData = user.toString().split("\\|");
+
+            LocalDate date = LocalDate.parse(userData[0]);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime time = LocalDateTime.parse(userData[1], formatter);
+            String description = userData[2];
+            String vendor = userData[3];
+            double amount = Double.parseDouble(userData[4]);
+            boolean deposit = Boolean.parseBoolean(userData[5]);
+
+            Transaction t = new Transaction(date, time, description, vendor, amount, deposit);
+
+            if (deposit == false) {
+                System.out.println(t);
+            }
+        }
+    }
+    public static void monthToDate() throws IOException {
+        FileReader fileReader = new FileReader("ledger.csv");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+        String user = null;
 
 
-//            switch (l) {
-//                case "A":
-//                    System.out.println(user);
-//                    break;
-//                case "D":
-//                    if (deposit == true) {
-//                        System.out.println(t);
-//                    } else {
-//                        System.out.println("");
-//                    }
-//                    break;
-//                case "P":
-//                    if (deposit == false) {
-//                        System.out.println(t);
-//                    } else {
-//                        System.out.println("");
-//                    }
-//                    break;
-//                case "R":
-//                    System.out.println("1) Month to Date");
-//                    System.out.println("2) Previous Date");
-//                    System.out.println("3) Year to Date");
-//                    System.out.println("4) Previous Year");
-//                    System.out.println("5) Search by Vendor");
-//                    System.out.println("6) Back");
-//
-//                    String p = scanner.nextLine();
-//
-//                    switch (p) {
-//                        case "1":
-//                            System.out.println(1);
-//                            break;
-//                        case "2":
-//                            System.out.println(2);
-//                            break;
-//                        case "3":
-//                            System.out.println(3);
-//                            break;
-//                        case "4":
-//                            System.out.println(4);
-//                            break;
-//                        case "5":
-//                            System.out.println(5);
-//                            break;
-//                        case "6":
-//                            System.out.println(6);
-//                            break;
-//                    }
-//
-//                    break;
-//                case "H":
-//                    System.out.println(2);
-//                    break;
-//
-//        }
-        bufferedReader.close();
+        while ((user = bufferedReader.readLine()) != null) {
+
+            String[] userData = user.toString().split("\\|");
+
+            LocalDate date = LocalDate.parse(userData[0]);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime time = LocalDateTime.parse(userData[1], formatter);
+            String description = userData[2];
+            String vendor = userData[3];
+            double amount = Double.parseDouble(userData[4]);
+            boolean deposit = Boolean.parseBoolean(userData[5]);
+
+            Transaction t = new Transaction(date, time, description, vendor, amount, deposit);
+
+            LocalDate currentDate = LocalDate.now();
+            Month month = currentDate.getMonth();
+
+            Month m = date.getMonth();
+
+            if (month.equals(m)){
+                System.out.println(t);
+            }
+
+        }
+    }
+    public static void previousMonth() throws IOException {
+        FileReader fileReader = new FileReader("ledger.csv");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+        String user = null;
+
+
+        while ((user = bufferedReader.readLine()) != null) {
+
+            String[] userData = user.toString().split("\\|");
+
+            LocalDate date = LocalDate.parse(userData[0]);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime time = LocalDateTime.parse(userData[1], formatter);
+            String description = userData[2];
+            String vendor = userData[3];
+            double amount = Double.parseDouble(userData[4]);
+            boolean deposit = Boolean.parseBoolean(userData[5]);
+
+            Transaction t = new Transaction(date, time, description, vendor, amount, deposit);
+
+            LocalDate currentDate = LocalDate.now().minusMonths(1);
+            Month month = currentDate.getMonth();
+            Month m = date.getMonth();
+
+            if (month.equals(m)){
+                System.out.println(t);
+            }
+
+        }
+    }
+    public static void yearToDate() throws IOException {
+        FileReader fileReader = new FileReader("ledger.csv");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+        String user = null;
+
+
+        while ((user = bufferedReader.readLine()) != null) {
+
+            String[] userData = user.toString().split("\\|");
+
+            LocalDate date = LocalDate.parse(userData[0]);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime time = LocalDateTime.parse(userData[1], formatter);
+            String description = userData[2];
+            String vendor = userData[3];
+            double amount = Double.parseDouble(userData[4]);
+            boolean deposit = Boolean.parseBoolean(userData[5]);
+
+            Transaction t = new Transaction(date, time, description, vendor, amount, deposit);
+
+            LocalDate currentDate = LocalDate.now();
+            int year = currentDate.getYear();
+            int y = date.getYear();
+
+            if (year == y){
+                System.out.println(t);
+            }
+
+        }
+    }
+    public static void previousYear() throws IOException {
+        FileReader fileReader = new FileReader("ledger.csv");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+        String user = null;
+
+
+        while ((user = bufferedReader.readLine()) != null) {
+
+            String[] userData = user.toString().split("\\|");
+
+            LocalDate date = LocalDate.parse(userData[0]);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime time = LocalDateTime.parse(userData[1], formatter);
+            String description = userData[2];
+            String vendor = userData[3];
+            double amount = Double.parseDouble(userData[4]);
+            boolean deposit = Boolean.parseBoolean(userData[5]);
+
+            Transaction t = new Transaction(date, time, description, vendor, amount, deposit);
+
+            LocalDate currentDate = LocalDate.now().minusYears(1);
+            int year = currentDate.getYear();
+            int y = date.getYear();
+
+            if (year == y){
+                System.out.println(t);
+            }
+
+        }
+    }
+
+    public static void displayReports() throws IOException {
+        System.out.println("1) Month To Date");
+        System.out.println("2) Previous Month");
+        System.out.println("3) Year To Date");
+        System.out.println("4) Previous Year");
+        System.out.println("5) Search By Vendor");
+        System.out.println("6) Back");
+
+        scanner = new Scanner(System.in);
+        String value = scanner.nextLine();
+
+        switch (value){
+            case "1":
+                monthToDate();
+                break;
+            case "2":
+               previousMonth();
+                break;
+            case "3":
+                yearToDate();
+                break;
+            case "4":
+                previousYear();
+                break;
+            case "5":
+                monthToDate();
+                break;
+            case "6":
+                monthToDate();
+                break;
+        }
+
     }
     public static void main(String[] args) {
         try {
-            //Home Screen
-            System.out.println("Home Screen");
-            System.out.println("D)" + "Add Deposit");
-            System.out.println("P)" + "Make Payment (Debit)");
-            System.out.println("L)" + "Ledger");
-            System.out.println("X)" + "Exit");
-
-            scanner = new Scanner(System.in);
-            String choice = scanner.nextLine();
-
-            switch (choice) {
-                case "D":
-                    makeDeposit();
-                    break;
-                case "P":
-                    makePayment();
-                    break;
-                case "L":
-                    ledgerScreen();
-                    break;
-                case "X":
-                    System.out.println("X)" + "Exit");
-                    break;
-            }
-
+            homeScreen();
         } catch (
                 Exception e) {
             e.printStackTrace();
